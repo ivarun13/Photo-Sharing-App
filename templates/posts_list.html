@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="col-md-6 col-md-offset-3">
+{#        <h1>My Posts</h1>#}
+        <a href="/create/" class="btn btn-primary" role="button">Create Post</a>
+    <br><br>
+        {% for object in object_list %}
+            <div class="row">
+  <div class="col-md-12">
+    <div class="thumbnail">
+        {{ object.user.username }}
+    <br><br>
+        {% if object.image %}
+        <img src="{{ object.image.url }}" class="img-responsive" >
+        {% endif %}
+      <div class="caption">
+        <h3><a href="{{ object.get_absolute_url }}"> {{ object.title }}</a>   <small>{{ object.timestamp | timesince }} ago</small></h3>
+        <p>{{ object.content | linebreaks | truncatechars:120 }}</p>
+        <p><a href="{{ object.get_absolute_url }}" class="btn btn-primary" role="button">View</a>
+{#            <a href="{{ object.get_absolute_url }}like" class="btn btn-primary" role="button" id="likes">Like#}
+{#            <span class="badge">{{  object.liked_post.count }}</span></a>#}
+            <button class="btn btn-mini btn-danger glyphicon glyphicon-heart" type="button" id="likes" data-id="{{ object.id }}" value="Like">
+            {{  object.liked_post.count }}</button>
+
+        </p>
+      </div>
+
+{#    Implement comments#}
+<form method="POST" action="{{ object.id }}/comment" enctype="multipart/form-data">{% csrf_token %}
+    {{ form | crispy }}
+<input type="submit" class="btn btn-primary btn-sm" value="Comment">
+</form>
+
+{#        {% for temp in object.post_comments.first %}#}
+    {% if object.post_comments.first %}
+            <blockquote class="blockquote">
+  <p class="mb-0">{{ object.post_comments.first.content }}</p>
+  <footer class="blockquote-footer"> <cite title="Source Title">{{ object.post_comments.first.user}}</cite></footer>
+            </blockquote>
+{#            {% endfor %}#}
+{%  endif %}
+    </div>
+  </div>
+</div>
+        {% endfor %}
+    </div>
+{% endblock %}

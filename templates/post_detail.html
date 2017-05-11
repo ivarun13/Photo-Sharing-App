@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="col-md-6 col-md-offset-3">
+{% if instance.image %}
+<img src="{{ instance.image.url }}" class="img-responsive">
+{% endif %}
+<h1>{{ instance.title }}    <small>{{ instance.timestamp }}</small></h1>
+{{ instance.content }}<br>
+{% for temp in instance.post_comments.all %}
+            <blockquote class="blockquote">
+  <p class="mb-0">{{ temp.content }}</p>
+  <footer class="blockquote-footer"> <cite title="Source Title">{{ temp.user}}</cite></footer>
+            </blockquote>
+           {% endfor %}
+</div>
+
+{% endblock %}
